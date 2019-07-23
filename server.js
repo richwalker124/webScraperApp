@@ -10,12 +10,12 @@ var axios = require("axios");
 var cheerio = require("cheerio");
 
 //Grab models
-var db = require("./models");
+var db = require("./models/article");
 
 //set up express
 var app = express();
-var dbConnection = process.env.MONGODB_URI || "mongodb://localhost/webScraper";
-
+//var dbConnection = process.env.MONGODB_URI || "mongodb://localhost/webScraper";
+var dbConnection = "mongodb://localhost/webScraper";
 // // Use morgan logger for logging requests
 // app.use(logger("dev"));
 
@@ -60,6 +60,9 @@ app.get("/scrape", function(req, res) {
       result.link = $(this)
         .children("a")
         .attr("href");
+      result.summary = $(this)
+        .children("p")
+        .text();
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
